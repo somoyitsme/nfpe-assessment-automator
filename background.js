@@ -230,8 +230,14 @@ function injected_isCycleComplete(index) {
   const el = cycles[index];
   if (!el) return false;
   const t = el.textContent, h = el.innerHTML;
-  return t.includes('\u2713') || t.includes('\u2714') || h.includes('fa-check') || h.includes('icon-check') ||
-    (el.className.includes('success') && !el.className.includes('outline'));
+  // Only match explicit tick/checkmark indicators — NOT green circle (active state)
+  if (t.includes('\u2713') || t.includes('\u2714') || t.includes('\u2705')) return true;
+  if (h.includes('fa-check') || h.includes('bi-check') || h.includes('icon-check')) return true;
+  const allCls = [el, ...el.querySelectorAll('*')].map(n => n.getAttribute?.('class') || '').join(' ');
+  if (/\b(completed|is-complete|is-done|unit-done|cycle-done|status-complete)\b/i.test(allCls)) return true;
+  const label = (el.getAttribute?.('title') || '') + ' ' + (el.getAttribute?.('aria-label') || '');
+  if (/complete|done|submitted/i.test(label)) return true;
+  return false;
 }
 
 function injected_allUnitsComplete() {
@@ -261,8 +267,14 @@ function injected_allUnitsComplete() {
 
   function isComplete(el) {
     const t = el.textContent, h = el.innerHTML;
-    return t.includes('✓') || t.includes('✔') || h.includes('fa-check') || h.includes('icon-check') ||
-      (el.className.includes('success') && !el.className.includes('outline'));
+    // Only match explicit tick/checkmark indicators — NOT green circle (active state)
+    if (t.includes('\u2713') || t.includes('\u2714') || t.includes('\u2705')) return true;
+    if (h.includes('fa-check') || h.includes('bi-check') || h.includes('icon-check')) return true;
+    const allCls = [el, ...el.querySelectorAll('*')].map(n => n.getAttribute?.('class') || '').join(' ');
+    if (/\b(completed|is-complete|is-done|unit-done|cycle-done|status-complete)\b/i.test(allCls)) return true;
+    const label = (el.getAttribute?.('title') || '') + ' ' + (el.getAttribute?.('aria-label') || '');
+    if (/complete|done|submitted/i.test(label)) return true;
+    return false;
   }
   return units.every(isComplete);
 }
@@ -296,8 +308,14 @@ function injected_isUnitComplete(index) {
   const el = units[index];
   if (!el) return false;
   const t = el.textContent, h = el.innerHTML;
-  return t.includes('✓') || t.includes('✔') || h.includes('fa-check') || h.includes('icon-check') ||
-    (el.className.includes('success') && !el.className.includes('outline'));
+  // Only match explicit tick/checkmark indicators — NOT green circle (active state)
+  if (t.includes('\u2713') || t.includes('\u2714') || t.includes('\u2705')) return true;
+  if (h.includes('fa-check') || h.includes('bi-check') || h.includes('icon-check')) return true;
+  const allCls = [el, ...el.querySelectorAll('*')].map(n => n.getAttribute?.('class') || '').join(' ');
+  if (/\b(completed|is-complete|is-done|unit-done|cycle-done|status-complete)\b/i.test(allCls)) return true;
+  const label = (el.getAttribute?.('title') || '') + ' ' + (el.getAttribute?.('aria-label') || '');
+  if (/complete|done|submitted/i.test(label)) return true;
+  return false;
 }
 
 function injected_getUnitCount() {
